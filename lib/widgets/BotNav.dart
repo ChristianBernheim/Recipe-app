@@ -4,7 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recipe_app/screen/HomeScreen.dart';
 import 'package:recipe_app/screen/LogIn.dart';
 import 'package:recipe_app/screen/Register.dart';
-import 'package:recipe_app/screen/WelcomeScreen.dart';
+import 'package:recipe_app/screen/recipe.dart';
 
 class BotNavbar extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class BotNavbarState extends State<BotNavbar> {
     HomeScreen(),
     LogInScreen(),
     RegisterScreen(),
-    WelcomeScreen(),
+    RecipeScreen(),
   ];
 
   @override
