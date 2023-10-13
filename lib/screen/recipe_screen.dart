@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:recipe_app/widgets/Ingredient.dart';
+import 'package:recipe_app/widgets/title_tile.dart';
 
 class RecipeScreen extends StatelessWidget {
   const RecipeScreen({super.key});
@@ -22,13 +23,7 @@ class RecipeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-              Text(
-                "Titel",
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold),
-              ),
+              TitleTile(title: "Recipe"),
               Divider(
                 thickness: 3,
                 color: Theme.of(context).colorScheme.secondary,
@@ -59,6 +54,7 @@ class RecipeScreen extends StatelessWidget {
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontSize: 16)),
+              //Change Sort of Text widget here??
               Text(
                 "Vispa ut mjölet i hälften av mjölken till en slät smet. Vispa i resterande mjölk, "
                 "ägg och salt. Låt smeten svälla ca 10 min. Smält smör i en stekpanna och häll ner i smeten. Grädda tunna pannkakor.",

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "273513496972",
+    "project_id": "mealmastermind-52f45",
+    "storage_bucket": "mealmastermind-52f45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273513496972:android:814bcd70e0ac4f0aee16a9",
+        "android_client_info": {
+          "package_name": "com.example.recipe_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcuJi7v4mTZIMspEFD2O_5IKXhunn0CpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

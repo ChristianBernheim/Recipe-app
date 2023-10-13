@@ -2,13 +2,25 @@
 
 import 'package:flutter/material.dart';
 
-class EmailTextField extends StatelessWidget {
-  const EmailTextField({super.key});
+class TextFieldWidget extends StatelessWidget {
+  final String labelText;
+  final bool? obscureText;
+  final TextInputType? keyboardType;
+  final TextEditingController controller;
+  TextFieldWidget({
+    super.key,
+    required this.labelText,
+    this.obscureText,
+    this.keyboardType,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      keyboardType: TextInputType.emailAddress,
+      controller: controller,
+      obscureText: obscureText ?? false,
+      keyboardType: keyboardType ?? TextInputType.text,
       style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
       cursorColor: Theme.of(context).colorScheme.tertiary,
       decoration: InputDecoration(
@@ -23,7 +35,7 @@ class EmailTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               borderSide:
                   BorderSide(color: Theme.of(context).colorScheme.secondary)),
-          labelText: "Email",
+          labelText: labelText,
           labelStyle: TextStyle(
             color: Theme.of(context).colorScheme.tertiary,
           )),
