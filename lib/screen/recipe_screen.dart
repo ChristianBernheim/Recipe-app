@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'package:recipe_app/widgets/Ingredient.dart';
+import 'package:recipe_app/widgets/ingredient.dart';
 import 'package:recipe_app/widgets/title_tile.dart';
 
 class RecipeScreen extends StatelessWidget {

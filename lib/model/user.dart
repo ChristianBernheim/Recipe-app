@@ -43,6 +43,7 @@ class UserModel {
         lastname: data["Lastname"],
         gender: data["Gender"],
         birthday: data["Birthday"],
-        email: data["Email"]);
+        email: data["Email"],
+        profilePicture: data["ProfilePicture"]);
   }
 }

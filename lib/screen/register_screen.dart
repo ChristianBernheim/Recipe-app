@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/repository/user_repository.dart';
+import 'package:recipe_app/controllers/user_controller.dart';
 import 'package:recipe_app/screen/log_in_screen.dart';
 import 'package:recipe_app/widgets/text_field_widget.dart';
 import 'package:recipe_app/widgets/title_tile.dart';

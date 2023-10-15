@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:recipe_app/screen/grocery_list_screen.dart';
 import 'package:recipe_app/screen/home_screen.dart';
 
 import 'package:recipe_app/screen/register_screen.dart';
@@ -18,7 +19,7 @@ class MainLoggedInScreenState extends State<MainLoggedInScreen> {
   final List<Widget> _screens = [
     HomeScreen(),
     WeeklyFoodListScreen(),
-    RegisterScreen(),
+    GroceryListScreen(),
     SettingsScreen(),
   ];
 
@@ -33,10 +34,10 @@ class MainLoggedInScreenState extends State<MainLoggedInScreen> {
           padding: const EdgeInsets.all(15.0),
           child: GNav(
             backgroundColor: Theme.of(context).colorScheme.primary,
-            color: Theme.of(context).colorScheme.tertiary,
-            activeColor: Theme.of(context).colorScheme.tertiary,
+            color: Theme.of(context).colorScheme.background,
+            activeColor: Theme.of(context).colorScheme.primary,
             tabBackgroundColor:
-                Theme.of(context).colorScheme.tertiary.withOpacity(0.4),
+                Theme.of(context).colorScheme.background.withOpacity(1),
             gap: 12,
             padding: EdgeInsets.all(16),
             tabs: [
@@ -48,7 +49,7 @@ class MainLoggedInScreenState extends State<MainLoggedInScreen> {
                 icon: Icons.list,
                 text: 'Weekly Food list',
               ),
-              GButton(icon: Icons.person_add, text: 'Register'),
+              GButton(icon: Icons.local_grocery_store, text: 'Grocery list'),
               GButton(
                 icon: Icons.settings,
                 text: 'Settings',
