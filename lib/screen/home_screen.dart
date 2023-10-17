@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/screen/add_recipe_screen.dart';
-import 'package:recipe_app/widgets/recipe_tile.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/components/recipe_tile.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);

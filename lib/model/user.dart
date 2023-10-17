@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recipe_app/model/family.dart';
 
 class UserModel {
   final String? uId;
@@ -9,6 +10,7 @@ class UserModel {
   String birthday;
   String email;
   String? profilePicture;
+  String? familyId;
 
   UserModel({
     this.uId,
@@ -19,6 +21,7 @@ class UserModel {
     required this.birthday,
     required this.email,
     this.profilePicture,
+    this.familyId,
   });
 
   toJson() {
@@ -30,6 +33,7 @@ class UserModel {
       "Birthday": birthday,
       "Email": email,
       "ProfilePicture": profilePicture,
+      "FamilyId": familyId
     };
   }
 
@@ -44,6 +48,7 @@ class UserModel {
         gender: data["Gender"],
         birthday: data["Birthday"],
         email: data["Email"],
-        profilePicture: data["ProfilePicture"]);
+        profilePicture: data["ProfilePicture"],
+        familyId: data["FamilyId"]);
   }
 }

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FamilyModel {
-  final String? uId;
+  final String? id;
   String name;
   List? familyMembers;
   List? favoriteRecipes;
 
   FamilyModel({
-    this.uId,
+    this.id,
     required this.name,
     this.familyMembers,
     this.favoriteRecipes,
@@ -25,7 +25,7 @@ class FamilyModel {
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return FamilyModel(
-      uId: document.id,
+      id: document.id,
       name: data["Name"],
       familyMembers: data["FamilyMembers"],
       favoriteRecipes: data["FavoriteRecipes"],

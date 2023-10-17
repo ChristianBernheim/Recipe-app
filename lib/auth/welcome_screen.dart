@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/screen/log_in_screen.dart';
 import 'package:recipe_app/screen/register_screen.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});

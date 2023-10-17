@@ -2,23 +2,27 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_app/auth/main_page.dart';
-import 'package:recipe_app/model/user.dart';
+import 'package:recipe_app/auth/auth.dart';
 import 'package:recipe_app/services/auth_service.dart';
-import 'package:recipe_app/services/firestore.dart';
-import 'package:recipe_app/widgets/square_Tile.dart';
-import 'package:recipe_app/widgets/text_field_widget.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/components/square_Tile.dart';
+import 'package:recipe_app/components/text_field_widget.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class LogInScreen extends StatelessWidget {
   LogInScreen({super.key});
+
   final _emailController = TextEditingController();
+
   final _passwordController = TextEditingController();
 
   Future SignIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+    }
   }
 
   @override
@@ -59,7 +63,7 @@ class LogInScreen extends StatelessWidget {
                   SignIn();
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => Auth()),
                   );
                 },
                 child: Text('Login'),

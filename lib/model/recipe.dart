@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:recipe_app/model/ingredient.dart';
 
 class RecipeModel {
-  final String? uId;
+  final String? id;
   String title;
+  String userId;
   //Over all rating? Family rating(sambandstabell med familyId, recipeId, rating?)
   // String rating;
   String cookTime;
   bool public;
-  //Måste vara en klass, ska innehålla namne, antal, måttenhet(Med en serch? ej för uppgiften?)
-  List<String> ingredients;
+  List<Ingredient> ingredients;
   String howToText;
   String? foodPicture;
 
   RecipeModel({
-    this.uId,
+    this.id,
+    required this.userId,
     required this.title,
     // required this.rating,
     required this.cookTime,
@@ -26,6 +28,7 @@ class RecipeModel {
   toJson() {
     return {
       "Title": title,
+      "UserId": userId,
       // "Rating": rating,
       "CookTime": cookTime,
       "Public": public,
@@ -39,13 +42,15 @@ class RecipeModel {
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return RecipeModel(
-        uId: document.id,
-        title: data["Title"],
-        // rating: data["Rating"],
-        cookTime: data["CookTime"],
-        public: data["Public"],
-        ingredients: data["Ingredients"],
-        howToText: data["HowToText"],
-        foodPicture: data["foodPicture"]);
+      id: document.id,
+      userId: data["UserId"],
+      title: data["Title"],
+      // rating: data["Rating"],
+      cookTime: data["CookTime"],
+      public: data["Public"],
+      ingredients: data["Ingredients"],
+      howToText: data["HowToText"],
+      foodPicture: data["foodPicture"],
+    );
   }
 }

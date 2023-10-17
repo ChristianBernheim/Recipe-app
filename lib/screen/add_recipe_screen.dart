@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_app/widgets/text_field_widget.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/components/text_field_widget.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class AddRecipeScreen extends StatefulWidget {
   const AddRecipeScreen({super.key});

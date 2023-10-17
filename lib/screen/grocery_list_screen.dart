@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_app/widgets/grocery_tile.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/screen/basic_goods_screen.dart';
+import 'package:recipe_app/screen/home_screen.dart';
+import 'package:recipe_app/components/grocery_tile.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class GroceryListScreen extends StatefulWidget {
   GroceryListScreen({super.key});
@@ -18,18 +21,35 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
     [false, "Pepsi", 2, "st"],
   ];
 
-  void checkBoxChange(bool? value, int index) {
+  void groceryPickedUp(bool? value, int index) {
     setState(() {
       groceries[index][0] = !groceries[index][0];
     });
   }
 
+  void addGroceriesToList() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return BasicGoodScreen();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: addGroceriesToList,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        child: IconTheme(
+            data: new IconThemeData(
+                color: Theme.of(context).colorScheme.background),
+            child: new Icon(Icons.add)),
+      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width,
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -47,13 +67,13 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            checkBoxChange(!groceries[index][0], index);
+                            groceryPickedUp(!groceries[index][0], index);
                           });
                         },
                         child: GroceryTile(
                             groceryPickedUp: groceries[index][0],
                             onChanged: (value) {
-                              checkBoxChange(value, index);
+                              groceryPickedUp(value, index);
                             },
                             title: groceries[index][1],
                             amount: groceries[index][2],

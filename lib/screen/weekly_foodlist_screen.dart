@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_app/widgets/recipe_tile.dart';
+import 'package:recipe_app/components/recipe_tile.dart';
 
 class WeeklyFoodListScreen extends StatelessWidget {
   const WeeklyFoodListScreen({super.key});

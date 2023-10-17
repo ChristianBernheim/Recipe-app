@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:recipe_app/auth/main_page.dart';
+import 'package:recipe_app/auth/auth.dart';
 import 'package:recipe_app/firebase_options.dart';
 
 import 'package:recipe_app/theme/theme_provider.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themedata,
-      home: MainPage(),
+      home: Auth(),
     );
   }
 }

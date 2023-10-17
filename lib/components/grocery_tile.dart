@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_app/widgets/title_tile.dart';
+import 'package:recipe_app/components/title_tile.dart';
 
 class GroceryTile extends StatelessWidget {
   GroceryTile({
@@ -29,7 +29,7 @@ class GroceryTile extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             color: groceryPickedUp
                 ? Colors.greenAccent
-                : Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                : Theme.of(context).colorScheme.tertiary.withOpacity(0.1),
             child: Padding(
               padding: const EdgeInsets.only(
                 left: 10,
@@ -42,7 +42,7 @@ class GroceryTile extends StatelessWidget {
                       style: TextStyle(
                         color: groceryPickedUp
                             ? Colors.green
-                            : Theme.of(context).colorScheme.tertiary,
+                            : Theme.of(context).colorScheme.secondary,
                         decoration: groceryPickedUp
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
@@ -53,7 +53,7 @@ class GroceryTile extends StatelessWidget {
                       style: TextStyle(
                         color: groceryPickedUp
                             ? Colors.green
-                            : Theme.of(context).colorScheme.tertiary,
+                            : Theme.of(context).colorScheme.secondary,
                         decoration: groceryPickedUp
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
