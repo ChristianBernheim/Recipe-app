@@ -2,16 +2,15 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/repository/user_repository.dart';
 import 'package:recipe_app/screen/log_in_screen.dart';
 import 'package:recipe_app/components/text_field_widget.dart';
 import 'package:recipe_app/components/title_tile.dart';
+import 'package:recipe_app/services/firestore_service.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   RegisterScreenState createState() => RegisterScreenState();
@@ -24,7 +23,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _dateController = TextEditingController();
-  final userRepo = Get.put(UserRepository());
+  final db = FireStoreService();
   DateTime pickedDate = DateTime.now();
   List<String> genders = ['Male', 'Female', 'Other'];
   late String _selectedGender = 'Male';
@@ -38,8 +37,8 @@ class RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> createUser(UserModel user) async {
-    await userRepo.createUser(user);
+  createUser(UserModel user) async {
+    await db.createUser(user);
   }
 
   Future<void> signUp() async {

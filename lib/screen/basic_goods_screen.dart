@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_app/components/basic_good_tile.dart';
-
-import 'package:recipe_app/components/text_field_widget.dart';
 import 'package:recipe_app/components/title_tile.dart';
 
 class BasicGoodScreen extends StatefulWidget {

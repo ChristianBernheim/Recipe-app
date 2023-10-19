@@ -3,21 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FamilyModel {
   final String? id;
   String name;
-  List? familyMembers;
-  List? favoriteRecipes;
+  List<dynamic>? familyMembersId;
+  List<dynamic>? favoriteRecipesId;
 
   FamilyModel({
     this.id,
     required this.name,
-    this.familyMembers,
-    this.favoriteRecipes,
+    this.familyMembersId,
+    this.favoriteRecipesId,
   });
 
   toJson() {
     return {
       "Name": name,
-      "FamilyMember": familyMembers,
-      "FavoriteRecipes": favoriteRecipes,
+      "FamilyMemberId": familyMembersId,
+      "FavoriteRecipesId": favoriteRecipesId,
     };
   }
 
@@ -27,8 +27,8 @@ class FamilyModel {
     return FamilyModel(
       id: document.id,
       name: data["Name"],
-      familyMembers: data["FamilyMembers"],
-      favoriteRecipes: data["FavoriteRecipes"],
+      familyMembersId: data["FamilyMemberId"],
+      favoriteRecipesId: data["FavoriteRecipesId"],
     );
   }
 }

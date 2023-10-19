@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_app/components/title_tile.dart';
 
 class GroceryTile extends StatelessWidget {
   GroceryTile({

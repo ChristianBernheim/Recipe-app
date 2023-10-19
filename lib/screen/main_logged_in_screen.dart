@@ -4,7 +4,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recipe_app/screen/grocery_list_screen.dart';
 import 'package:recipe_app/screen/home_screen.dart';
 
-import 'package:recipe_app/screen/register_screen.dart';
 import 'package:recipe_app/screen/settings_screen.dart';
 import 'package:recipe_app/screen/weekly_foodlist_screen.dart';
 

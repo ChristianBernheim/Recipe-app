@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recipe_app/auth/welcome_screen.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/services/firestore_user.dart';
+import 'package:recipe_app/screen/family_screen.dart';
+import 'package:recipe_app/services/firestore_service.dart';
 import 'package:recipe_app/theme/theme_provider.dart';
 import 'package:recipe_app/components/settings_tile.dart';
 import 'package:recipe_app/components/title_tile.dart';
@@ -37,7 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     final user = snapshot.data;
                     return Column(
                       children: [
-                        Text("${user!.firstname} ${user!.lastname}"),
+                        Text("${user!.firstname} ${user.lastname}"),
                         ElevatedButton(
                             onPressed: () {}, child: Text("Edit profile"))
                       ],
@@ -75,7 +74,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               iconName: Icons.person,
               title: "Account",
             ),
-            SettingsTile(iconName: Icons.group, title: "Family", onTap: () {}),
+            SettingsTile(
+              iconName: Icons.group,
+              title: "Family",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FamilyScreen()),
+                );
+              },
+            ),
             SettingsTile(
               onTap: () {
                 FirebaseAuth.instance.signOut();
