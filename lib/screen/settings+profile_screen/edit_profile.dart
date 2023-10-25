@@ -15,11 +15,8 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _firstnameController = TextEditingController();
-
   final _lastnameController = TextEditingController();
-
   final _passwordController = TextEditingController();
-
   final _confirmPasswordController = TextEditingController();
   final db = FireStoreService();
 

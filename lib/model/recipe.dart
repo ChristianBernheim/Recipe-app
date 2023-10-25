@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_app/model/ingredient.dart';
+import 'package:recipe_app/model/ingredient_stuff.dart';
 
 class RecipeModel {
   final String? id;
@@ -7,9 +8,8 @@ class RecipeModel {
   String userId;
   //Over all rating? Family rating(sambandstabell med familyId, recipeId, rating?)
   // String rating;
-  String cookTime;
-  bool public;
-  List<IngredientModel> ingredients;
+  String? cookTime;
+  List<IngredientAmountModel> ingredients;
   String howToText;
   String? foodPicture;
 
@@ -18,8 +18,7 @@ class RecipeModel {
     required this.userId,
     required this.title,
     // required this.rating,
-    required this.cookTime,
-    required this.public,
+    this.cookTime,
     required this.ingredients,
     required this.howToText,
     this.foodPicture,
@@ -31,7 +30,6 @@ class RecipeModel {
       "UserId": userId,
       // "Rating": rating,
       "CookTime": cookTime,
-      "Public": public,
       "Ingredients": ingredients,
       "HowToText": howToText,
       "FoodPicture": foodPicture,
@@ -47,7 +45,6 @@ class RecipeModel {
       title: data["Title"],
       // rating: data["Rating"],
       cookTime: data["CookTime"],
-      public: data["Public"],
       ingredients: data["Ingredients"],
       howToText: data["HowToText"],
       foodPicture: data["foodPicture"],

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:recipe_app/model/user.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,53 +17,32 @@ class CameraOrLibraryTile extends StatefulWidget {
 class _CameraOrLibraryTileState extends State<CameraOrLibraryTile> {
   FirebaseStorage _storage = FirebaseStorage.instance;
 
-  File? _image;
   final db = FireStoreService();
-  uploadImage() async {
-    if (_image == null) return;
+  uploadImage(String path) async {
+    if (path == null) return;
 
     try {
       Reference ref = _storage
           .ref()
           .child('profile_images/${DateTime.now().millisecondsSinceEpoch}');
-      UploadTask uploadTask = ref.putFile(_image!);
-      TaskSnapshot taskSnapshot = await uploadTask;
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-      setState(() {
-        widget.user.profilePicture = downloadUrl;
-      });
+      final result = await ref.putFile(File(path));
+      String fileUrl = await result.ref.getDownloadURL();
+      widget.user.profilePicture = fileUrl;
       await db.updateUser(widget.user);
-      Navigator.pop(context);
     } catch (e) {
       print('error occurred: $e');
     }
   }
 
-//Using camera to upload a picture
-  _imgFromCamera() async {
-    final pickedImage = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 15);
-
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-        uploadImage();
-      });
-    }
-  }
-
-//Getting image from library
-  _imgFromLibrary() async {
-    final pickedImage = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 15);
-
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-        uploadImage();
-      });
-    }
+  _pickImage(ImageSource source) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 15);
+    if (pickedFile == null) return;
+    var file = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1));
+    uploadImage(file!.path);
   }
 
   @override
@@ -92,7 +72,7 @@ class _CameraOrLibraryTileState extends State<CameraOrLibraryTile> {
                       iconSize: 50,
                       onPressed: () {
                         Navigator.pop(context);
-                        _imgFromLibrary();
+                        _pickImage(ImageSource.gallery);
                       },
                       icon: Icon(Icons.photo_library),
                     ),
@@ -104,7 +84,7 @@ class _CameraOrLibraryTileState extends State<CameraOrLibraryTile> {
                       iconSize: 50,
                       onPressed: () {
                         Navigator.pop(context);
-                        _imgFromCamera();
+                        _pickImage(ImageSource.camera);
                       },
                       icon: Icon(Icons.photo_camera),
                     ),

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class IngredientAmountModel {
   String? id;
-  String? ingredientId;
+  String ingredientId;
   double amount;
   String unit;
 

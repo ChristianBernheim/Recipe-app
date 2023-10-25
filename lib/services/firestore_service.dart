@@ -92,13 +92,22 @@ class FireStoreService {
   CollectionReference ingredients =
       FirebaseFirestore.instance.collection("Ingredients");
 
-  Future<void> createIngredient(IngredientModel ingredient) async {
-    await ingredients.add(ingredient.toJson());
+  Future<DocumentReference> createIngredient(IngredientModel ingredient) async {
+    return await ingredients.add(ingredient.toJson());
   }
 
   Stream<IngredientModel> getIngredient(String? id) {
     var ingredientRef = ingredients.doc(id);
     return ingredientRef.snapshots().map((document) {
+      return IngredientModel.fromSnapshot(
+          document as DocumentSnapshot<Map<String, dynamic>>);
+    });
+  }
+
+  Stream<IngredientModel> getIngredientByName(String name) {
+    var ingredientRef = ingredients.where('name', isEqualTo: name).limit(1);
+    return ingredientRef.snapshots().map((querySnapshot) {
+      var document = querySnapshot.docs.first;
       return IngredientModel.fromSnapshot(
           document as DocumentSnapshot<Map<String, dynamic>>);
     });
@@ -112,7 +121,31 @@ class FireStoreService {
     await ingredients.doc(id).delete();
   }
 
-  /*********************** IngredientStuff ***********************/
-  CollectionReference IngredientAmountModel =
+  /*********************** IngredientAmount ***********************/
+  CollectionReference ingredientAmountModel =
       FirebaseFirestore.instance.collection("IngredientAmount");
+
+  Future<void> createIngredientAmount(
+      IngredientAmountModel ingredientAmount) async {
+    await ingredientAmountModel.add(ingredientAmount.toJson());
+  }
+
+  Stream<IngredientModel> getIngredientAmount(String? id) {
+    var ingredientRef = ingredientAmountModel.doc(id);
+    return ingredientRef.snapshots().map((document) {
+      return IngredientModel.fromSnapshot(
+          document as DocumentSnapshot<Map<String, dynamic>>);
+    });
+  }
+
+  Future<void> updateIngredientAmount(
+      IngredientAmountModel ingredientAmount) async {
+    await ingredientAmountModel
+        .doc(ingredientAmount.id)
+        .update(ingredientAmount.toJson());
+  }
+
+  Future<void> deleteIngredientAmount(String id) async {
+    await ingredientAmountModel.doc(id).delete();
+  }
 }

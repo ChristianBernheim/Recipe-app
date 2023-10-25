@@ -69,71 +69,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CreateRecipeScreen()),
-            );
-          },
-          backgroundColor: Theme.of(context).colorScheme.background,
-          child: Icon(Icons.add),
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Theme.of(context).colorScheme.background,
-                Theme.of(context).colorScheme.primary,
-              ],
-            ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateRecipeScreen()),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.background,
+        child: Icon(Icons.add),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.primary,
+            ],
           ),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: TitleTile(title: "What do you want to cook today?"),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(left: 10),
-                        padding: EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: TextField(
-                          controller: searchController,
-                          onChanged: searchRecipes,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(Icons.search),
-                            hintText: "Search for recipes",
-                          ),
-                        ),
+        ),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: TitleTile(title: "What do you want to cook today?"),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(
+                        left: 10,
+                        right: 10,
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Theme.of(context)
                             .colorScheme
@@ -141,32 +116,55 @@ class _HomeScreenState extends State<HomeScreen> {
                             .withOpacity(0.2),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: Icon(Icons.tune),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: searchRecipes,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          icon: Icon(Icons.search),
+                          hintText: "Search for recipes",
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "Search Results",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ),
-                Container(
-                  height: 200,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: displayedRecipeCards.map((recipe) {
-                      return RecipeCard(
-                        title: recipe.title,
-                        description: recipe.description,
-                      );
-                    }).toList(),
+                  SizedBox(
+                    width: 10,
                   ),
+                  Container(
+                    margin: EdgeInsets.only(right: 10),
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(Icons.tune),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Search Results",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                height: 200,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: displayedRecipeCards.map((recipe) {
+                    return RecipeCard(
+                      title: recipe.title,
+                      description: recipe.description,
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         ),
       ),
