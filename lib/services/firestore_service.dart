@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_app/model/family.dart';
+import 'package:recipe_app/model/ingredient_stuff.dart';
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/model/user.dart';
+import 'package:recipe_app/model/ingredient.dart';
 
 class FireStoreService {
   /*********************** USER ***********************/
   CollectionReference users = FirebaseFirestore.instance.collection("Users");
-  //CreateUser
+
   Future<void> createUser(UserModel user) async {
     await users.add(user.toJson());
   }
 
-  //get the logged in user.
   Stream<UserModel> getUserStream(String? email) {
     var userRef = users.where("Email", isEqualTo: email);
     return userRef.snapshots().map((document) {
@@ -29,37 +30,89 @@ class FireStoreService {
             .toList());
   }
 
-/*********************** Family ***********************/
-  CollectionReference familys = FirebaseFirestore.instance.collection("Family");
-  //Create family
-  Future<void> createFamily(FamilyModel family, UserModel user) async {
-    await familys.add(family.toJson());
-    user.familyId = familys.doc().id;
+  Future<void> updateUser(UserModel user) async {
+    await users.doc(user.uId).update(user.toJson());
   }
 
-//Get family for logged in user.
+  Future<void> deleteUser(String id) async {
+    await users.doc(id).delete();
+  }
+
+  /*********************** Family ***********************/
+  CollectionReference families =
+      FirebaseFirestore.instance.collection("Family");
+
+  Future<void> createFamily(FamilyModel family, UserModel user) async {
+    var familyDocRef = await families.add(family.toJson());
+    user.familyId = familyDocRef.id;
+    await users.doc(user.uId).update({'FamilyId': user.familyId});
+  }
+
   Stream<FamilyModel> getFamilyStream(String? id) {
-    var familyRef = familys.doc(id);
+    var familyRef = families.doc(id);
     return familyRef.snapshots().map((document) {
       return FamilyModel.fromSnapshot(
           document as DocumentSnapshot<Map<String, dynamic>>);
     });
   }
 
-  /*********************** Recipe ***********************/
-  CollectionReference recipies =
-      FirebaseFirestore.instance.collection("Family");
-  //Create family
-  Future<void> createRecipe(RecipeModel recipe, UserModel user) async {
-    await recipies.add(recipe.toJson());
+  Future<void> updateFamily(FamilyModel family) async {
+    await families.doc(family.id).update(family.toJson());
   }
 
-//Get family for logged in user.
+  Future<void> deleteFamily(String id) async {
+    await families.doc(id).delete();
+  }
+
+  /*********************** Recipe ***********************/
+  CollectionReference recipes =
+      FirebaseFirestore.instance.collection("Recipes");
+
+  Future<void> createRecipe(RecipeModel recipe) async {
+    await recipes.add(recipe.toJson());
+  }
+
   Stream<RecipeModel> getRecipe(String? id) {
-    var recipeRef = recipies.doc(id);
+    var recipeRef = recipes.doc(id);
     return recipeRef.snapshots().map((document) {
       return RecipeModel.fromSnapshot(
           document as DocumentSnapshot<Map<String, dynamic>>);
     });
   }
+
+  Future<void> updateRecipe(RecipeModel recipe) async {
+    await recipes.doc(recipe.id).update(recipe.toJson());
+  }
+
+  Future<void> deleteRecipe(String id) async {
+    await recipes.doc(id).delete();
+  }
+
+  /*********************** Ingredient ***********************/
+  CollectionReference ingredients =
+      FirebaseFirestore.instance.collection("Ingredients");
+
+  Future<void> createIngredient(IngredientModel ingredient) async {
+    await ingredients.add(ingredient.toJson());
+  }
+
+  Stream<IngredientModel> getIngredient(String? id) {
+    var ingredientRef = ingredients.doc(id);
+    return ingredientRef.snapshots().map((document) {
+      return IngredientModel.fromSnapshot(
+          document as DocumentSnapshot<Map<String, dynamic>>);
+    });
+  }
+
+  Future<void> updateIngredient(IngredientModel ingredient) async {
+    await ingredients.doc(ingredient.id).update(ingredient.toJson());
+  }
+
+  Future<void> deleteIngredient(String id) async {
+    await ingredients.doc(id).delete();
+  }
+
+  /*********************** IngredientStuff ***********************/
+  CollectionReference IngredientAmountModel =
+      FirebaseFirestore.instance.collection("IngredientAmount");
 }

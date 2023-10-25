@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/screen/log_in_screen.dart';
+import 'package:recipe_app/screen/sign%20up%20and%20in%20screen/log_in_screen.dart';
 import 'package:recipe_app/components/text_field_widget.dart';
 import 'package:recipe_app/components/title_tile.dart';
 import 'package:recipe_app/services/firestore_service.dart';

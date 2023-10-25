@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe_app/components/CameraOrLibaryTile.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/screen/family_screen.dart';
+import 'package:recipe_app/screen/settings+profile_screen/edit_profile.dart';
+import 'package:recipe_app/screen/settings+profile_screen/family_screen.dart';
 import 'package:recipe_app/services/firestore_service.dart';
 import 'package:recipe_app/theme/theme_provider.dart';
 import 'package:recipe_app/components/settings_tile.dart';
@@ -16,12 +18,21 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  void CameraOrLibary(UserModel user) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CameraOrLibraryTile(user: user);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final db = FireStoreService();
     var isDark = Theme.of(context).brightness == Brightness.dark;
     final currentUser = FirebaseAuth.instance.currentUser;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -36,9 +47,62 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     final user = snapshot.data;
                     return Column(
                       children: [
-                        Text("${user!.firstname} ${user.lastname}"),
+                        GestureDetector(
+                          onTap: () {
+                            CameraOrLibary(user);
+                          },
+                          child: Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              Container(
+                                width: 150,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      width: 3),
+                                ),
+                                child: user!.profilePicture != null
+                                    ? ClipOval(
+                                        child: Image.network(
+                                          user.profilePicture!,
+                                          fit: BoxFit.cover,
+                                          width: 150,
+                                          height: 150,
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.person,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        size: 150,
+                                      ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 8, right: 10),
+                                child: Icon(
+                                  Icons.edit,
+                                  size: 30,
+                                  color: Theme.of(context).colorScheme.tertiary,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Text("${user.firstname} ${user.lastname}"),
                         ElevatedButton(
-                            onPressed: () {}, child: Text("Edit profile"))
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditProfileScreen(user: user)),
+                              );
+                            },
+                            child: Text("Edit profile"))
                       ],
                     );
                   } else {

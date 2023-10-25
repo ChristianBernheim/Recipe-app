@@ -19,6 +19,10 @@
 <!-- End of the Google Sign-in Section -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Libary Access warning</string>
+	<key>NSCameraUsageDescription </key>
+	<string>Camera Access Warning </string>
 	<key>CFBundleDisplayName</key>
 	<string>Recipe App</string>
 	<key>CFBundleExecutable</key>

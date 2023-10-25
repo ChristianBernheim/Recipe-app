@@ -9,7 +9,7 @@ class RecipeModel {
   // String rating;
   String cookTime;
   bool public;
-  List<Ingredient> ingredients;
+  List<IngredientModel> ingredients;
   String howToText;
   String? foodPicture;
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_app/screen/basic_goods_screen.dart';
+
 import 'package:recipe_app/components/grocery_tile.dart';
 import 'package:recipe_app/components/title_tile.dart';
+import 'package:recipe_app/screen/weekly%20food%20and%20groceries/basic_goods_screen.dart';
 
 class GroceryListScreen extends StatefulWidget {
   GroceryListScreen({super.key});

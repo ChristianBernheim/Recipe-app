@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:recipe_app/screen/add_recipe_screen.dart';
+import 'package:recipe_app/screen/recipe%20screen/create_recipe_screen.dart';
 import 'package:recipe_app/components/recipe_tile.dart';
 import 'package:recipe_app/components/title_tile.dart';
 
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AddRecipeScreen()),
+              MaterialPageRoute(builder: (context) => CreateRecipeScreen()),
             );
           },
           backgroundColor: Theme.of(context).colorScheme.background,

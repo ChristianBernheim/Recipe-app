@@ -1,8 +1,11 @@
+/*******Notes *******/
+//Merge this with home_screen, are going to be the same.
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/components/title_tile.dart';
 import 'package:recipe_app/model/user.dart';
-import 'package:recipe_app/screen/create_family_dialog.dart';
+import 'package:recipe_app/screen/settings+profile_screen/create_family_dialog.dart';
 import 'package:recipe_app/services/firestore_service.dart';
 
 class FamilyScreen extends StatefulWidget {

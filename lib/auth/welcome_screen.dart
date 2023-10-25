@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names
 
 import 'package:flutter/material.dart';
-import 'package:recipe_app/screen/log_in_screen.dart';
-import 'package:recipe_app/screen/register_screen.dart';
+import 'package:recipe_app/screen/sign%20up%20and%20in%20screen/log_in_screen.dart';
+import 'package:recipe_app/screen/sign%20up%20and%20in%20screen/register_screen.dart';
 import 'package:recipe_app/components/title_tile.dart';
 
 class WelcomeScreen extends StatelessWidget {

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app/components/text_field_widget.dart';
 import 'package:recipe_app/components/title_tile.dart';
 
-class AddRecipeScreen extends StatefulWidget {
-  const AddRecipeScreen({super.key});
+class CreateRecipeScreen extends StatefulWidget {
+  const CreateRecipeScreen({super.key});
 
   @override
-  State<AddRecipeScreen> createState() => AddRecipeState();
+  State<CreateRecipeScreen> createState() => AddRecipeState();
 }
 
 final titleController = TextEditingController();
 
-class AddRecipeState extends State<AddRecipeScreen> {
+class AddRecipeState extends State<CreateRecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

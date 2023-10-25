@@ -1,11 +1,10 @@
 // ignore_for_file: file_names, prefer_const_constructors, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:recipe_app/screen/grocery_list_screen.dart';
 import 'package:recipe_app/screen/home_screen.dart';
-
-import 'package:recipe_app/screen/settings_screen.dart';
-import 'package:recipe_app/screen/weekly_foodlist_screen.dart';
+import 'package:recipe_app/screen/settings+profile_screen/settings_screen.dart';
+import 'package:recipe_app/screen/weekly%20food%20and%20groceries/grocery_list_screen.dart';
+import 'package:recipe_app/screen/weekly%20food%20and%20groceries/weekly_foodlist_screen.dart';
 
 class MainLoggedInScreen extends StatefulWidget {
   @override
