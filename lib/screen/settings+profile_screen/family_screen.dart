@@ -48,7 +48,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
             ),
             StreamBuilder<UserModel>(
                 stream: db.getUserStream(currentUser!.email),
-                builder: ((context, snapshot) {
+                builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final user = snapshot.data;
                     if (user!.familyId != null) {
@@ -120,7 +120,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   } else {
                     return Text(snapshot.error.toString());
                   }
-                })),
+                }),
           ]),
         ));
   }

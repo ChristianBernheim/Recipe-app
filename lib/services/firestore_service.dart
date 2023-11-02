@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:recipe_app/model/family.dart';
-import 'package:recipe_app/model/ingredient_stuff.dart';
+import 'package:recipe_app/model/ingredient_amount.dart';
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/model/user.dart';
 import 'package:recipe_app/model/ingredient.dart';
+import 'package:recipe_app/model/weekly_list.dart';
 
 class FireStoreService {
   /*********************** USER ***********************/
@@ -80,6 +81,52 @@ class FireStoreService {
     });
   }
 
+  Stream<List<RecipeModel>> getAllRecipesStream() {
+    var recipieS = recipes.snapshots().map((uSnapshots) {
+      return uSnapshots.docs.map((doc) {
+        return RecipeModel.fromSnapshot(
+            doc as DocumentSnapshot<Map<String, dynamic>>);
+      }).toList();
+    });
+    return recipieS;
+  }
+
+  Future<List<RecipeModel>> getAllRecipeFuture() async {
+    List<RecipeModel> recipieList = [];
+    var recipies = await recipes.get();
+    for (var doc in recipies.docs) {
+      recipieList.add(RecipeModel.fromSnapshot(
+          doc as DocumentSnapshot<Map<String, dynamic>>));
+    }
+    return recipieList;
+  }
+
+  Stream<List<RecipeModel>> getCertainRecipesStream(List<dynamic> recipeIds) {
+    if (recipeIds == null || recipeIds == [])
+      print("null recept fan $recipeIds");
+    var recipieS = recipes.snapshots().map((uSnapshots) {
+      return uSnapshots.docs
+          .map((doc) {
+            return RecipeModel.fromSnapshot(
+                doc as DocumentSnapshot<Map<String, dynamic>>);
+          })
+          .where((recipe) => recipeIds.contains(recipe.id))
+          .toList();
+    });
+    print("recept eller type så: $recipieS");
+    return recipieS;
+  }
+
+  Stream<List<RecipeModel>> getAllMyRecipesStream(String userId) {
+    var recipeRef = recipes.where('UserId', isEqualTo: userId);
+    return recipeRef.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return RecipeModel.fromSnapshot(
+            doc as DocumentSnapshot<Map<String, dynamic>>);
+      }).toList();
+    });
+  }
+
   Future<void> updateRecipe(RecipeModel recipe) async {
     await recipes.doc(recipe.id).update(recipe.toJson());
   }
@@ -94,6 +141,16 @@ class FireStoreService {
 
   Future<DocumentReference> createIngredient(IngredientModel ingredient) async {
     return await ingredients.add(ingredient.toJson());
+  }
+
+  Stream<List<IngredientModel>> getAllIngredients() {
+    var ingredientsRef = ingredients.snapshots();
+    return ingredientsRef.map((querySnapshot) {
+      return querySnapshot.docs.map((document) {
+        return IngredientModel.fromSnapshot(
+            document as DocumentSnapshot<Map<String, dynamic>>);
+      }).toList();
+    });
   }
 
   Stream<IngredientModel> getIngredient(String? id) {
@@ -119,6 +176,35 @@ class FireStoreService {
 
   Future<void> deleteIngredient(String id) async {
     await ingredients.doc(id).delete();
+  }
+
+  Future<List<IngredientModel>> getIngredientsByPartialName(
+      String partialName) async {
+    var ingredientsRef = await ingredients.get();
+    var allIngredients = ingredientsRef.docs.map(
+      (document) => IngredientModel.fromSnapshot(
+        document as DocumentSnapshot<Map<String, dynamic>>,
+      ),
+    );
+
+    return allIngredients
+        .where((ingredient) =>
+            ingredient.name.toLowerCase().contains(partialName.toLowerCase()))
+        .toList();
+  }
+
+  Future<bool> doesIngredientExist(String ingredientName) async {
+    try {
+      QuerySnapshot querySnapshot = await ingredients
+          .where('name', isEqualTo: ingredientName)
+          .limit(1)
+          .get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print("Error checking if ingredient exists: $e");
+      return false; // Handle the error according to your application's needs
+    }
   }
 
   /*********************** IngredientAmount ***********************/
@@ -147,5 +233,39 @@ class FireStoreService {
 
   Future<void> deleteIngredientAmount(String id) async {
     await ingredientAmountModel.doc(id).delete();
+  }
+
+  /*********************** Weekly List ***********************/
+  CollectionReference weeklyLists =
+      FirebaseFirestore.instance.collection("WeeklyList");
+
+  Future<String> createWeeklyList(WeeklyListModel weeklyListModel) async {
+    DocumentReference docRef = await weeklyLists.add(weeklyListModel.toJson());
+
+    // Return the ID of the newly created document
+    return docRef.id;
+  }
+
+  Stream<WeeklyListModel> getWeeklyList(String week, String familyId) {
+    var weeklyListRef = weeklyLists
+        .where("Week", isEqualTo: week)
+        .where("FamilyId", isEqualTo: familyId);
+    return weeklyListRef.snapshots().map(
+      (snapshot) {
+        print('QuerySnapshot docs: ${snapshot.docs.map((e) => e.id)}');
+        return snapshot.docs.map((doc) {
+          return WeeklyListModel.fromSnapshot(
+              doc as DocumentSnapshot<Map<String, dynamic>>);
+        }).first;
+      },
+    );
+  }
+
+  Future<void> updateWeeklyList(WeeklyListModel weeklyList) async {
+    await weeklyLists.doc(weeklyList.id).update(weeklyList.toJson());
+  }
+
+  Future<void> deleteWeeklyList(String id) async {
+    await weeklyLists.doc(id).delete();
   }
 }

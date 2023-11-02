@@ -20,11 +20,8 @@ class IngredientAmountModel {
     };
   }
 
-  factory IngredientAmountModel.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
-    final data = document.data()!;
+  factory IngredientAmountModel.fromJson(Map<String, dynamic> data) {
     return IngredientAmountModel(
-      id: document.id,
       ingredientId: data["IngredientId"],
       amount: data["Amount"],
       unit: data["Unit"],

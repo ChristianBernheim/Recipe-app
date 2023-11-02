@@ -8,7 +8,8 @@ class IngredientModel {
     this.id,
     required this.name,
   });
-  toJson() {
+
+  Map<String, dynamic> toJson() {
     return {
       "Name": name,
     };

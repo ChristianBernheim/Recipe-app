@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recipe_app/components/CameraOrLibaryTile.dart';
+import 'package:recipe_app/components/camera_or_library_tile.dart';
 import 'package:recipe_app/model/user.dart';
 import 'package:recipe_app/screen/settings+profile_screen/edit_profile.dart';
 import 'package:recipe_app/screen/settings+profile_screen/family_screen.dart';
@@ -77,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         Icons.person,
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .primary,
+                                            .secondary,
                                         size: 150,
                                       ),
                               ),

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:recipe_app/screen/home_screen.dart';
 import 'package:recipe_app/screen/settings+profile_screen/settings_screen.dart';
-import 'package:recipe_app/screen/weekly%20food%20and%20groceries/grocery_list_screen.dart';
-import 'package:recipe_app/screen/weekly%20food%20and%20groceries/weekly_foodlist_screen.dart';
+
+import 'package:recipe_app/screen/weekly_food_and_groceries/grocery_list_screen.dart';
+import 'package:recipe_app/screen/weekly_food_and_groceries/weekly_foodlist_screen.dart';
 
 class MainLoggedInScreen extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class MainLoggedInScreenState extends State<MainLoggedInScreen> {
           child: GNav(
             backgroundColor: Theme.of(context).colorScheme.primary,
             color: Theme.of(context).colorScheme.background,
-            activeColor: Theme.of(context).colorScheme.primary,
+            activeColor: Theme.of(context).colorScheme.secondary,
             tabBackgroundColor:
                 Theme.of(context).colorScheme.background.withOpacity(1),
             gap: 12,

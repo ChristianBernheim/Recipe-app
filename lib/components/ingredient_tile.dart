@@ -6,7 +6,7 @@ double halfscreen = double.infinity / 2;
 
 class IngredientWidget extends StatelessWidget {
   final String title;
-  final int amount;
+  final double amount;
   final String measurementUnit;
 
   const IngredientWidget(

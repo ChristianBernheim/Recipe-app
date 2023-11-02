@@ -70,7 +70,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 fontWeight: FontWeight.bold),
           ),
           TextFieldWidget(
-            labelText: "Password",
+            labelText: "New password",
             controller: _passwordController,
           ),
           SizedBox(
@@ -83,8 +83,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ElevatedButton(
               onPressed: () {
                 if (_confirmPasswordController.text ==
-                    _passwordController.text) {
-                  if (_firstnameController != null &&
+                        _passwordController.text ||
+                    _confirmPasswordController.text == "" &&
+                        _passwordController.text == "") {
+                  if (_firstnameController.text != "" &&
                       _firstnameController != widget.user.firstname) {
                     widget.user.firstname = _firstnameController.text.trim();
                   }

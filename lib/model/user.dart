@@ -23,7 +23,7 @@ class UserModel {
     this.familyId,
   });
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "UserId": userId,
       "Firstname": firstname,
@@ -40,14 +40,15 @@ class UserModel {
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return UserModel(
-        uId: document.id,
-        userId: data["UserId"],
-        firstname: data["Firstname"],
-        lastname: data["Lastname"],
-        gender: data["Gender"],
-        birthday: data["Birthday"],
-        email: data["Email"],
-        profilePicture: data["ProfilePicture"],
-        familyId: data["FamilyId"]);
+      uId: document.id,
+      userId: data["UserId"],
+      firstname: data["Firstname"],
+      lastname: data["Lastname"],
+      gender: data["Gender"],
+      birthday: data["Birthday"],
+      email: data["Email"],
+      profilePicture: data["ProfilePicture"],
+      familyId: data["FamilyId"],
+    );
   }
 }

@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/components/basic_good_tile.dart';
 import 'package:recipe_app/components/title_tile.dart';
+import 'package:recipe_app/model/recipe.dart';
+import 'package:recipe_app/model/user.dart';
+import 'package:recipe_app/services/firestore_service.dart';
 
 class BasicGoodScreen extends StatefulWidget {
   BasicGoodScreen({super.key});
@@ -11,6 +15,7 @@ class BasicGoodScreen extends StatefulWidget {
 
 class _BasicGoodScreenState extends State<BasicGoodScreen> {
   TextEditingController _addGroceries = new TextEditingController();
+
   final List _basicGoods = [
     [false, "Diskmedel"],
     [false, "Blöjor"],
