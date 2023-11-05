@@ -25,7 +25,7 @@ class TextFieldWidget extends StatelessWidget {
       cursorColor: Theme.of(context).colorScheme.tertiary,
       decoration: InputDecoration(
           filled: true,
-          fillColor: Color(0xFFFFFFFF),
+          fillColor: Color(0x20FFFFFF),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(

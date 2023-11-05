@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe_app/components/add_family_favorite_recipe.dart';
 import 'package:recipe_app/components/recipe_tile.dart';
 import 'package:recipe_app/components/title_tile.dart';
+import 'package:recipe_app/model/family.dart';
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/screen/recipe_screen/create_recipe_screen.dart';
 import 'package:recipe_app/screen/recipe_screen/edit_recipe_screen.dart';
@@ -18,19 +20,55 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final authUser = FirebaseAuth.instance.currentUser;
   TextEditingController searchController = TextEditingController();
+  final authUser = FirebaseAuth.instance.currentUser;
   final db = FireStoreService();
+  var query;
   List<RecipeModel> allRecipes = [];
+  List<RecipeModel> searchResults = [];
+  List<String> familyAddRecipeList = [];
+  void addToFamilyFavorites(BuildContext context, String recipeId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add to Family Favorites"),
+          content: Text(
+              "Are you sure you want to add this recipe to your family favorites?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddFamilyFavoriteRecipe(recipeId),
+                  ),
+                );
+              },
+              child: Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void searchRecipes(String query) {
-    List<RecipeModel> results = [];
-    for (RecipeModel recipe in allRecipes) {
-      // assuming allRecipes is a list of all recipes
-      if (recipe.title.contains(query)) {
-        results.add(recipe);
+    setState(() {
+      searchResults.clear();
+      for (RecipeModel recipe in allRecipes) {
+        if (recipe.title.contains(query)) {
+          searchResults.add(recipe);
+        }
       }
-    }
-    // Now 'results' contains all recipes that have 'query' in their title
+    });
   }
 
   @override
@@ -49,16 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Theme.of(context).colorScheme.background,
-                Theme.of(context).colorScheme.primary,
-              ],
-            ),
-          ),
+          color: Theme.of(context).colorScheme.background,
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: TextField(
                           controller: searchController,
-                          onChanged: searchRecipes,
+                          onChanged: (query) {
+                            searchRecipes(query);
+                          },
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(Icons.search),
@@ -140,6 +171,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
+                              onLongPress: () {
+                                addToFamilyFavorites(
+                                    context, allRecipes[index].id!);
+                              },
                               child: RecipeCard(
                                 recipeImage: allRecipes[index].foodPicture,
                                 title: allRecipes[index].title,
@@ -178,20 +213,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         final user = snapshot.data;
                         if (user!.familyId != null) {
                           return StreamBuilder(
-                              stream: db.getFamilyStream(user.familyId),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  print("Error: ${snapshot.error}");
-                                  return Text('Error: ${snapshot.error}');
-                                } else if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return const CircularProgressIndicator();
-                                } else {
-                                  final family = snapshot.data;
+                            stream: db.getFamilyStream(user.familyId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                print("Error: ${snapshot.error}");
+                                return Text('Error: ${snapshot.error}');
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else {
+                                final family = snapshot.data;
 
+                                if (family != null &&
+                                    family.favoriteRecipesId != null &&
+                                    family.favoriteRecipesId != "") {
                                   return StreamBuilder(
                                     stream: db.getCertainRecipesStream(
-                                        family!.favoriteRecipesId!),
+                                        family.favoriteRecipesId!),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasError) {
                                         print(
@@ -237,18 +275,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                             },
                                           ),
                                         );
-                                      } else if (snapshot.hasError) {
-                                        print("Error: ${snapshot.error}");
-                                        return Text('Error: ${snapshot.error}');
                                       } else {
                                         return Text('No recipes available');
                                       }
                                     },
                                   );
+                                } else {
+                                  return Text(
+                                      'No family favorite recipes available');
                                 }
-                              });
+                              }
+                            },
+                          );
                         } else {
-                          return Row(
+                          return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
@@ -279,36 +319,47 @@ class _HomeScreenState extends State<HomeScreen> {
                   stream: db.getAllMyRecipesStream(authUser!.uid),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return Container(
-                        height: 200,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: snapshot.data!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            allRecipes = snapshot.data!;
-                            return GestureDetector(
-                              onTap: () {
-                                String? recipeId = allRecipes[index].id!;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditRecipeScreen(recipeId),
-                                  ),
-                                );
-                              },
-                              child: RecipeCard(
-                                recipeImage: allRecipes[index].foodPicture,
-                                title: allRecipes[index].title,
-                                cookTime: allRecipes[index].cookTime,
-                              ),
-                            );
-                          },
-                        ),
-                      );
+                      if (snapshot.data != [] && snapshot.data != null) {
+                        print("Allrecipies testtest: ${snapshot.data}");
+                        return Container(
+                          height: 200,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              allRecipes = snapshot.data!;
+                              print("Allrecipies testtest: $allRecipes");
+                              return GestureDetector(
+                                onTap: () {
+                                  String? recipeId = allRecipes[index].id!;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditRecipeScreen(recipeId),
+                                    ),
+                                  );
+                                },
+                                child: RecipeCard(
+                                  recipeImage: allRecipes[index].foodPicture,
+                                  title: allRecipes[index].title,
+                                  cookTime: allRecipes[index].cookTime,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Text("You have not created any recipes.");
+                      }
                     } else if (snapshot.hasError) {
                       print("Error: ${snapshot.error}");
                       return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
                       return Text('No recipes available');
                     }

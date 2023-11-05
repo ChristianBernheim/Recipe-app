@@ -29,22 +29,27 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 50,
-                  ),
-                  TitleTile(title: "Welcome to MealMastermind!"),
-                  //Change to a RichText and fix the wat it looks
-                  Text(
-                    "Simplify your meal planning with our intuitive app. Discover new recipes, create weekly menus, and share your culinary adventures with your family. Say goodbye to mealtime stress and hello to delicious simplicity."
-                    "Key Features:"
-                    "Recipe Discovery: Explore a vast library of mouthwatering dishes from around the world."
-                    "Customizable Menus: Plan your meals for the entire week in just a few clicks."
-                    "Family Ratings: Get feedback from your loved ones and fine-tune your menu for everyone's taste."
-                    "Grocery List Integration: Automatically generate shopping lists based on your chosen recipes."
-                    "Start your culinary journey today with MealMastermind!",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.tertiary,
-                        fontSize: 20),
+                  Image.asset('lib/image/meal_mastermind_logo.png'),
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 5,
+                      left: 25,
+                      right: 25,
+                    ),
+                    child: Column(
+                      children: [
+                        TitleTile(title: "Welcome to MealMastermind!"),
+                        Center(
+                          child: Text(
+                            "Discover and collect recipes with your family, and even add your own! Easily create weekly food lists and get your grocery list automatically. Say goodbye to meal planning stress and hello to more free time!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 50,
@@ -54,7 +59,8 @@ class WelcomeScreen extends StatelessWidget {
                           color: Theme.of(context).colorScheme.tertiary)),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiary),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -68,7 +74,8 @@ class WelcomeScreen extends StatelessWidget {
                           color: Theme.of(context).colorScheme.tertiary)),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiary),
                     onPressed: () {
                       Navigator.push(
                         context,

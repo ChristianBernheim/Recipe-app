@@ -20,7 +20,9 @@ class _CreateFamilyDialogState extends State<CreateFamilyDialog> {
   createFamily(UserModel user) async {
     List familyMembers = [user.uId];
     final family = FamilyModel(
-        name: _nameController.text.trim(), familyMembersId: familyMembers);
+      name: _nameController.text.trim(),
+      familyMembersId: familyMembers,
+    );
     await db.createFamily(family, user);
     Navigator.pop(context);
   }

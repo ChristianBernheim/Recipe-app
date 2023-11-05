@@ -34,7 +34,7 @@ class MainLoggedInScreenState extends State<MainLoggedInScreen> {
           child: GNav(
             backgroundColor: Theme.of(context).colorScheme.primary,
             color: Theme.of(context).colorScheme.background,
-            activeColor: Theme.of(context).colorScheme.secondary,
+            activeColor: Theme.of(context).colorScheme.primary,
             tabBackgroundColor:
                 Theme.of(context).colorScheme.background.withOpacity(1),
             gap: 12,

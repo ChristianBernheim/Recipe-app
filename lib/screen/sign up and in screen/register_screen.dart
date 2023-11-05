@@ -71,13 +71,10 @@ class RegisterScreenState extends State<RegisterScreen> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).colorScheme.background,
         body: Container(
+          padding: EdgeInsets.all(25),
           alignment: Alignment.center,
           child: Column(
             children: [
-              Text("Namn"),
-              Divider(
-                thickness: 3,
-              ),
               Center(child: TitleTile(title: "Register")),
               SizedBox(
                 height: 50,
@@ -116,12 +113,12 @@ class RegisterScreenState extends State<RegisterScreen> {
                 child: Row(
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width / 3,
+                      width: MediaQuery.of(context).size.width / 4,
                       child: TextField(
                         controller: _dateController,
                         decoration: InputDecoration(
                             filled: true,
-                            fillColor: Color(0xFFFFFFFF),
+                            fillColor: Color(0x20FFFFFF),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(
@@ -153,10 +150,15 @@ class RegisterScreenState extends State<RegisterScreen> {
                         },
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width / 3),
+                    SizedBox(width: MediaQuery.of(context).size.width / 3.5),
                     Container(
+                      padding: EdgeInsets.all(5),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 0.5),
+                          borderRadius: BorderRadius.circular(15),
+                          color: Color(0x20FFFFFF)),
                       width: MediaQuery.of(context).size.width / 3,
-                      color: Colors.white,
                       child: DropdownButton(
                         items: genders
                             .map(

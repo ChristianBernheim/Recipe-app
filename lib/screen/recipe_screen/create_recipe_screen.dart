@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:recipe_app/components/photo_for_recipe.dart';
 import 'package:recipe_app/components/error_empty_field_dialog.dart';
 import 'package:recipe_app/components/ingredient_tile.dart';
 import 'package:recipe_app/components/text_field_widget.dart';
@@ -10,6 +9,10 @@ import 'package:recipe_app/model/ingredient_amount.dart';
 import 'package:recipe_app/model/recipe.dart';
 import 'package:recipe_app/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateRecipeScreen extends StatefulWidget {
   const CreateRecipeScreen({super.key});
@@ -21,6 +24,7 @@ class CreateRecipeScreen extends StatefulWidget {
 class CreateRecipeState extends State<CreateRecipeScreen> {
   final db = FireStoreService();
   final currentUser = FirebaseAuth.instance.currentUser;
+  FirebaseStorage _storage = FirebaseStorage.instance;
   List<IngredientAmountModel> ingredientAmountList = [];
   List<IngredientWidget> ingredientWidgets = [];
   List<String> userMethodSteps = [];
@@ -36,13 +40,92 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
     return await db.getIngredientsByPartialName(pattern);
   }
 
+  void _uploadImage(String path) async {
+    if (path == null) return;
+
+    try {
+      Reference ref = _storage
+          .ref()
+          .child('recipe_images/${DateTime.now().millisecondsSinceEpoch}');
+
+      final result = await ref.putFile(File(path));
+      String fileUrl = await result.ref.getDownloadURL();
+      print('Uploaded image URL: $fileUrl'); // Debugging line
+
+      setState(() {
+        recipePicture = fileUrl;
+      });
+    } catch (e) {
+      print('error occurred: $e');
+    }
+  }
+
+  _pickImage(ImageSource source) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 15);
+    if (pickedFile == null) return;
+    var file = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1));
+    _uploadImage(file!.path);
+  }
+
   void CameraOrLibary() async {
-    recipePicture = await showDialog(
-        context: context,
-        builder: (context) {
-          return PhotoForRecipe();
-        });
-    print("test oliver: $recipePicture");
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width / 1,
+            height: MediaQuery.of(context).size.height / 3,
+            child: AlertDialog(
+              backgroundColor:
+                  Theme.of(context).colorScheme.tertiary.withOpacity(0.8),
+              title: Center(
+                child: Text(
+                  "Choose between",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
+                ),
+              ),
+              content: Column(
+                children: [
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          color: Theme.of(context).colorScheme.primary,
+                          iconSize: 50,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _pickImage(ImageSource.gallery);
+                          },
+                          icon: Icon(Icons.photo_library),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        IconButton(
+                          color: Theme.of(context).colorScheme.primary,
+                          iconSize: 50,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _pickImage(ImageSource.camera);
+                          },
+                          icon: Icon(Icons.photo_camera),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   List<InlineSpan> generateUserMethodSteps() {
@@ -100,17 +183,11 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                     Container(
                       width: 150,
                       height: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 3),
-                      ),
                       child: recipePicture != null
                           ? Image.network(recipePicture!)
                           : Icon(
                               Icons.photo_camera,
-                              color: Theme.of(context).colorScheme.secondary,
+                              color: Theme.of(context).colorScheme.tertiary,
                               size: 150,
                             ),
                     ),
@@ -154,7 +231,7 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                       padding: EdgeInsets.all(10),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0x20FFFFFF),
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(
                               width: 0.5,
@@ -167,7 +244,8 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                               controller: _ingredientNameController,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  fillColor: Colors.white,
+                                  filled: true,
+                                  fillColor: Color(0x20FFFFFF),
                                   labelText: "Ingredient name",
                                   labelStyle: TextStyle(
                                     color:
@@ -214,9 +292,13 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                                   bottom: 5,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Color(0x20FFFFFF),
                                   borderRadius: BorderRadius.circular(15),
-                                  border: Border.all(width: 0.5),
+                                  border: Border.all(
+                                      width: 0.5,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary),
                                 ),
                                 child: DropdownButtonFormField<String>(
                                   decoration: InputDecoration(
@@ -255,78 +337,79 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                                 ),
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                // Add ingredient to the DB
-                                if (_ingredientNameController.text != "" ||
-                                    _ingredientAmountController.text != "" ||
-                                    _selectedUnit != null) {
-                                  // Capitalize the first letter of the ingredient name
-                                  String capitalizedIngredientName =
-                                      _ingredientNameController.text[0]
-                                              .toUpperCase() +
-                                          _ingredientNameController.text
-                                              .substring(1);
-                                  String ingredientName =
-                                      capitalizedIngredientName;
-                                  double ingredientAmount = double.parse(
-                                      _ingredientAmountController.text);
-                                  String? ingredientUnit = _selectedUnit;
-
-                                  // Check if the ingredient already exists in the database
-                                  bool ingredientExists =
-                                      await db.doesIngredientExist(
-                                          capitalizedIngredientName);
-
-                                  if (ingredientExists == true) {
-                                    print("Ingredient already exists.");
-                                  } else {
-                                    await db.createIngredient(
-                                      IngredientModel(
-                                        name: capitalizedIngredientName,
-                                      ),
-                                    );
-
-                                    ingredientAmountList.add(
-                                      IngredientAmountModel(
-                                        ingredientId: ingredientName,
-                                        amount: ingredientAmount,
-                                        unit: ingredientUnit ?? "",
-                                      ),
-                                    );
-
-                                    _ingredientNameController.clear();
-                                    _ingredientAmountController.clear();
-
-                                    setState(() {
-                                      ingredientWidgets.add(
-                                        IngredientWidget(
-                                          title: capitalizedIngredientName,
-                                          amount: ingredientAmount,
-                                          measurementUnit: ingredientUnit ?? "",
-                                        ),
-                                      );
-                                    });
-                                  }
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ErrorEmptyFieldDialog();
-                                    },
-                                  );
-                                }
-                              },
-                              child: Text("Add Ingredient"),
-                            ),
                           ],
                         ),
                       ),
                     ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        // Add ingredient to the DB
+                        if (_ingredientNameController.text != "" ||
+                            _ingredientAmountController.text != "" ||
+                            _selectedUnit != null) {
+                          // Capitalize the first letter of the ingredient name
+                          String capitalizedIngredientName =
+                              _ingredientNameController.text[0].toUpperCase() +
+                                  _ingredientNameController.text.substring(1);
+                          String ingredientName = capitalizedIngredientName;
+                          double ingredientAmount =
+                              double.parse(_ingredientAmountController.text);
+                          String? ingredientUnit = _selectedUnit;
+
+                          // Check if the ingredient already exists in the database
+                          bool ingredientExists = await db
+                              .doesIngredientExist(capitalizedIngredientName);
+
+                          if (ingredientExists == true) {
+                            print("Ingredient already exists.");
+                          } else {
+                            await db.createIngredient(
+                              IngredientModel(
+                                name: capitalizedIngredientName,
+                              ),
+                            );
+
+                            ingredientAmountList.add(
+                              IngredientAmountModel(
+                                ingredientId: ingredientName,
+                                amount: ingredientAmount,
+                                unit: ingredientUnit ?? "",
+                              ),
+                            );
+
+                            _ingredientNameController.clear();
+                            _ingredientAmountController.clear();
+
+                            setState(() {
+                              ingredientWidgets.add(
+                                IngredientWidget(
+                                  title: capitalizedIngredientName,
+                                  amount: ingredientAmount,
+                                  measurementUnit: ingredientUnit ?? "",
+                                ),
+                              );
+                            });
+                          }
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ErrorEmptyFieldDialog();
+                            },
+                          );
+                        }
+                      },
+                      child: Text("Add Ingredient"),
+                    ),
                     Divider(
                         height: 2,
                         color: Theme.of(context).colorScheme.tertiary),
-                    Text("Ingredients"),
+                    Text(
+                      "Ingredients",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.bold),
+                    ),
                     Column(
                       children: ingredientWidgets,
                     ),
@@ -341,11 +424,19 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                     Container(
                       width: 300,
                       height: 150,
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                          color: Color(0x20FFFFFF),
+                          border: Border.all(
+                              width: 0.5,
+                              color: Theme.of(context).colorScheme.tertiary)),
                       child: TextField(
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary),
                         maxLines: null,
                         controller: _howToController,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Color(0x20FFFFFF),
                           labelText: 'Method',
                           hintText: 'Enter your method',
                         ),
@@ -377,6 +468,8 @@ class CreateRecipeState extends State<CreateRecipeScreen> {
                     ),
                     RichText(
                       text: TextSpan(
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary),
                         children: generateUserMethodSteps(),
                       ),
                     ),

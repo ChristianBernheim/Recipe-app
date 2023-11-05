@@ -27,20 +27,13 @@ class WeeklyFoodListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the current day
     DateTime now = DateTime.now();
+    int currentDay = now.weekday;
+    double initialScrollOffset = (currentDay - 1) * 200.0;
 
-    int currentDay = now.weekday; // 1 for Monday, 7 for Sunday
-
-    double initialScrollOffset =
-        (currentDay - 1) * 200.0; // Adjust 100.0 as needed
-
-    // Create a ScrollController and set its initialScrollOffset
     ScrollController _scrollController =
         ScrollController(initialScrollOffset: initialScrollOffset);
 
-//https://theusmanhaider.medium.com/get-the-current-week-number-of-year-in-dart-739371403b67
-//To calculate what weeknumber it is now
     int weeksBetween(DateTime from, DateTime to) {
       from = DateTime.utc(from.year, from.month, from.day);
       to = DateTime.utc(to.year, to.month, to.day);
@@ -67,19 +60,19 @@ class WeeklyFoodListScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final user = snapshot.data!;
-              if (user.familyId != null) {
+              if (user.familyId != null && user.familyId != "") {
                 return StreamBuilder(
                   stream: db.getFamilyStream(user.familyId),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final family = snapshot.data!;
-                      if (family.weeklyList != null) {
+                      if (family.weeklyList != null &&
+                          family.weeklyList!.isNotEmpty) {
                         return StreamBuilder(
                             stream: db.getWeeklyList(weekString, family.id!),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 final weeklyList = snapshot.data!;
-
                                 return StreamBuilder<List<RecipeModel>>(
                                     stream: db.getCertainRecipesStream(
                                         weeklyList.recipesID!),
@@ -101,13 +94,14 @@ class WeeklyFoodListScreen extends StatelessWidget {
                                           body: Column(
                                             children: [
                                               Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      3,
-                                                  child: TitleTile(
-                                                      title:
-                                                          "Week ${weekNumber}")),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    3,
+                                                child: TitleTile(
+                                                  title: "Week $weekNumber",
+                                                ),
+                                              ),
                                               Container(
                                                 padding:
                                                     const EdgeInsets.all(25),
@@ -137,7 +131,7 @@ class WeeklyFoodListScreen extends StatelessWidget {
                                                                 color: Theme.of(
                                                                         context)
                                                                     .colorScheme
-                                                                    .secondary, // Highlight color for current day
+                                                                    .secondary,
                                                                 width: 2,
                                                               ),
                                                               borderRadius:
@@ -180,7 +174,7 @@ class WeeklyFoodListScreen extends StatelessWidget {
                                         );
                                       } else if (snapshot.hasError) {
                                         print(
-                                            "getWeeklyList: ${snapshot.error}");
+                                            "getWeeklyList1: ${snapshot.error}");
                                         return Text(
                                             "Opss... Something went wrong");
                                       } else {
@@ -200,7 +194,7 @@ class WeeklyFoodListScreen extends StatelessWidget {
                                       }
                                     });
                               } else if (snapshot.hasError) {
-                                print("getWeeklyList: ${snapshot.error}");
+                                print("getWeeklyList2: ${snapshot.error}");
                                 return Text("Opss... Something went wrong");
                               } else {
                                 return CircularProgressIndicator(
@@ -233,6 +227,25 @@ class WeeklyFoodListScreen extends StatelessWidget {
                     }
                     return CircularProgressIndicator();
                   },
+                );
+              } else {
+                return Scaffold(
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                            "You need to create a family to have a weekly List."),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Add the logic to create a family here
+                          },
+                          child: Text("Create a Family"),
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               }
             }

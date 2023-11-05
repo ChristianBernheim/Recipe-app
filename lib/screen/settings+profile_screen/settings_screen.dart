@@ -92,7 +92,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ],
                           ),
                         ),
-                        Text("${user.firstname} ${user.lastname}"),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4, bottom: 4),
+                          child: Text(
+                            "${user.firstname} ${user.lastname}",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -149,6 +158,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             SettingsTile(
+                iconName: Icons.receipt, title: "Recipe", onTap: () {}),
+            Padding(
+              padding: const EdgeInsets.all(25),
+              child: Divider(
+                thickness: 3,
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.7),
+              ),
+            ),
+            SettingsTile(
+                iconName: Icons.feedback, title: "Feedback", onTap: () {}),
+            SettingsTile(
               onTap: () {
                 FirebaseAuth.instance.signOut();
               },
@@ -157,10 +177,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               forwardArrow: false,
               textColor: Colors.red,
             ),
-            Divider(
-              thickness: 3,
-              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.7),
-            )
           ],
         ),
       ),
